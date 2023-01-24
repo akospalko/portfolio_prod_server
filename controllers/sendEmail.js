@@ -9,7 +9,12 @@ const emailAuth = {
   mypassword: process.env.NODEMAILER_PASSWORD,
 }
 
-//
+//get status code whenever request is made with transporter to the server  
+const getStatusCode = (responseData) => {
+  console.log(responseData.data);
+  return Number(responseData.split(' ')[0].slice(0, 3)) 
+}
+
 const mailTemplate = (name, email, message) => {
   return `<h3> Information: </h3>
   <ul style=" margin:0 0 0 10px; padding:0; ">
@@ -50,7 +55,7 @@ const sendEmail = async (req, res) => {
       const send = await transporter.sendMail(mailOptions);
       if(send) {
         isSent = true;
-        statusMessage = 'Success. Mail is sent!';
+        statusMessage = 'Email is sent!';
         statusCode = getStatusCode(send.response);
         res.status(statusCode).json({ mailSent: isSent, statusMessage: statusMessage, statusCode: statusCode })
       }

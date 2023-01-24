@@ -1,7 +1,6 @@
 //validate recaptcha
 const axios = require('axios');
 require('dotenv').config();
-const getStatusCode = require('../helper/getStatusCode');
 
 const validateReCaptcha = async (req, res) => {
   //containers
@@ -15,22 +14,20 @@ const validateReCaptcha = async (req, res) => {
   const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${ secretKey }&response=${ token }`;
   
   if(!token) {
-    return res.status(400).json({ success: false, responseMsg: 'Couldn\'t receive token' }); 
+    return res.status(400).json({ verified: false, statusMessage: 'Couldn\'t receive token', statusCode: 400 }); 
   } else {
-    console.log('validating recaptcha', token);
-    try{
+    try {
       // verify captcha, store result 
       const verifiedCaptcha = await axios.post(verifyURL);
-      console.log('validating recaptcha', verifiedCaptcha);
       verified = verifiedCaptcha.data.success;
       if(verified) {
-        statusMessage = 'Success. Captcha is valid!';
-        statusCode = getStatusCode(verifiedCaptcha.response);
+        statusMessage = 'Captcha is valid!';
+        statusCode = verifiedCaptcha.status || 200;
         return res.status(statusCode).json({ verified: verified, statusMessage: statusMessage, statusCode: statusCode });
       }
     } catch (error) {
-      statusMessage = 'Failure. Captcha is invalid!';
-      statusCode = getStatusCode(error.response) || 500;
+      statusMessage = 'Captcha is invalid!';
+      statusCode = verifiedCaptcha.status || 500;
       return res.status(statusCode).json({ verified: verified, statusMessage: statusMessage, statusCode: statusCode });
     }
   }
