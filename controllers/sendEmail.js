@@ -1,7 +1,6 @@
 //send mail module
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // access .env contents stored in a variable 
-const getStatusCode  = require('../helper/getStatusCode');
 
 //auth data to access email account
 const emailAuth = {
