@@ -10,7 +10,7 @@ const port = 3000;
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors({ // allow cors for a specific origin 
-  origin: 'https://palkoakos.onrender.com'
+  origin: process.env.CORS_ORIGIN_BASE_URL
 }))
 
 //routes
